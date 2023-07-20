@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 void main() {
@@ -28,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     // Initialize the WebSocket connection
-    channel = WebSocketChannel.connect(Uri.parse('ws://39.108.14.126:9006'));
+    channel = IOWebSocketChannel.connect(Uri.parse('ws://39.108.14.126:9006'));
     // Set up the listener for incoming messages
     // channel.stream.listen((message) {
     //   setState(() {
