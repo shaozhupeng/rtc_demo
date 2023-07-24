@@ -1,50 +1,66 @@
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'dart:async';
+
 import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:socket_io_client/socket_io_client.dart' as sic;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class WebSocketManager {
-  final String url;
-  late WebSocketChannel _channel;
-
-  WebSocketManager({required this.url});
-
-  // 连接WebSocket
-  Future<void> connect() async {
-    _channel = IOWebSocketChannel.connect(url);
-    _channel.stream.listen((data) {
-      // 处理接收到的数据
-      handleReceivedData(data);
-    }, onError: (error) {
-      // 处理连接错误
-      handleError(error);
-    }, onDone: () {
-      // 处理连接关闭
-      handleDone();
-    });
+  late WebSocketChannel channel;
+  static WebSocketManager? _instance;
+  static const String socketUrl = 'ws://127.0.0.1:9006';
+  WebSocketManager._() {
+    if (kIsWeb) {
+      channel = WebSocketChannel.connect(Uri.parse(socketUrl));
+    } else {
+      channel = IOWebSocketChannel.connect(Uri.parse(socketUrl));
+    }
   }
 
-  // 关闭WebSocket连接
-  void disconnect() {
-    _channel.sink.close();
+  static WebSocketManager getInstance() {
+    _instance ??= WebSocketManager._();
+    return _instance!;
+  }
+}
+
+class SocketIOManager {
+  static SocketIOManager? _instance;
+  late sic.Socket socket;
+  static const String socketUrl = 'http://192.168.31.108:5004';
+  StreamController controller = StreamController.broadcast();
+  late Map<String, dynamic> options;
+  SocketIOManager._() {
+    options = {
+      'transports': ['websocket'], // 指定使用 WebSocket 传输协议
+      'extraHeaders': {
+        'Authorization': 'Bearer your_access_token'
+      }, // 可以添加额外的请求头
+      'autoConnect': false, // 是否自动连接
+      'debug': true,
+    };
+    if (kIsWeb) {
+      options['extraHeaders'] = {
+        'Authorization': 'Bearer your_web_access_token',
+      };
+      socket = sic.io(socketUrl, options);
+    } else {
+      socket = sic.io(socketUrl, options);
+    }
+  }
+  static SocketIOManager getInstance() {
+    _instance ??= SocketIOManager._();
+    return _instance!;
   }
 
-  // 发送消息
-  void sendMessage(String message) {
-    _channel.sink.add(message);
+  void connect() {
+    socket.connect();
   }
 
-  // 处理接收到的数据
-  void handleReceivedData(dynamic data) {
-    // 在这里解析和处理接收到的信令数据
-    print('Received: $data');
+  void on(String event, Function(dynamic) callback) {
+    socket.on(event, callback);
   }
 
-  // 处理连接错误
-  void handleError(dynamic error) {
-    print('WebSocket error: $error');
-  }
-
-  // 处理连接关闭
-  void handleDone() {
-    print('WebSocket closed');
+  void emit(String event, Map<String, dynamic> data) {
+    socket.emit(event, data);
   }
 }
