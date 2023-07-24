@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     socket.socket.onConnect((data) {
       print('Connected to the server!');
-      //socket.emit('join', {'username': 'test', 'room': '123456'});
+      socket.emit('join', {'username': 'test', 'room': '123456'});
       socket.socket.on('audio_data', _handleAudioData);
       socket.socket.on('data', _handleOtherData);
     });
