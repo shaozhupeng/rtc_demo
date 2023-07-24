@@ -38,6 +38,7 @@ dependencies:
   flutter_webrtc: any
   shelf_web_socket: ^1.0.4
   socket_io_client: any
+  permission_handler: any
   flutter_sound: any 
 
 dev_dependencies:

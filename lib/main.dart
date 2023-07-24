@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:rtc_demo/audio_send.dart';
 import 'package:rtc_demo/helper/web_socket_manager.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: MyHomePage(),
+      home: AudioSend(),
     );
   }
 }

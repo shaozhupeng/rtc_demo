@@ -26,8 +26,8 @@ class WebSocketManager {
 class SocketIOManager {
   static SocketIOManager? _instance;
   late sic.Socket socket;
-  //static const String socketUrl = 'http://192.168.31.108:5004';
-  static const String socketUrl = 'http://127.0.0.1:5004';
+  static const String socketUrl = 'http://192.168.31.108:5004';
+  //static const String socketUrl = 'http://127.0.0.1:5004';
   StreamController controller = StreamController.broadcast();
   late Map<String, dynamic> options;
   SocketIOManager._() {
